@@ -1,0 +1,523 @@
+exp
+	CLPRN
+	call exp
+	CRPRN
+	call nop
+	or
+	call unary
+	call exp
+	or
+	call nv
+	call nop
+	ret
+unary
+	CPLUS
+	chng
+	CUPLUS
+	or
+	CMINUS
+	chng
+	CUMINUS
+	or
+	CNOT
+	ret
+nv
+	call nfun
+	or
+	call nvar
+	or
+	tncon
+	or
+	call stcomp
+	ret
+nop
+	call op
+	call exp
+	or
+	ret
+op
+	CEXP
+	or
+	CPLUS
+	or
+	CMINUS
+	or
+	CMUL
+	or
+	CDIV
+	or
+	CLE
+	or
+	CGE
+	or
+	CNE
+	or
+	CLT
+	or
+	CGT
+	or
+	CEQ
+	or
+	CAND
+	or
+	COR
+	or
+	ret
+nvar
+	tnvar
+	call nmat
+	ret
+nmat
+	CLPRN
+	chng
+	CALPRN
+	call exp
+	call nmat2
+	CRPRN
+	or
+	ret
+nmat2
+	CCOM
+	chng
+	CACOM
+	call exp
+	or
+	ret
+nfun
+	CNFNP
+	call nfp
+	or
+	call nfsp
+	call sfp
+	or
+	call nfusr
+	ret
+nfusr
+	CUSR
+	CLPRN
+	chng
+	CFLPRN
+	call pusr
+	CRPRN
+	ret
+nfp
+	CLPRN
+	chng
+	CFLPRN
+	call exp
+	CRPRN
+	ret
+sfp
+	CLPRN
+	chng
+	CFLPRN
+	call str
+	CRPRN
+	ret
+stcomp
+	call str
+	call sop
+	call str
+	ret
+str
+	call sfun
+	or
+	call svar
+	or
+	tscon
+	ret
+sfun
+	call sfnp
+	call nfp
+	ret
+svar
+	tsvar
+	call smat
+	ret
+smat
+	CLPRN
+	chng
+	CSLPRN
+	call exp
+	call smat2
+	or
+	ret
+smat2
+	CCOM
+	chng
+	CACOM
+	call exp
+	or
+	ret
+sop
+	CLE
+	chng
+	CSLE
+	or
+	CNE
+	chng
+ 	CSNE
+	or
+	CGE
+	chng
+	CSGE
+	or
+	CLT
+	chng
+	CSLT
+	or
+	CGT
+	chng
+	CSGT
+	or
+	CEQ
+	chng
+	CSEQ
+	ret
+sput
+	CPND
+	call exp
+	CCOM
+strap
+sgoto
+sgosub
+sgr
+scolor
+xeos
+	call exp
+scsave
+scload
+sdos
+sclr
+sret
+send
+sstop
+spop
+snew
+sbyte
+scont
+sdeg
+srad
+	call eos
+	ret
+slet
+silet
+	call nvar
+	CEQ
+	chng
+	CAASN
+	call exp
+	call eos
+	or
+	call svar
+	CEQ
+	chng
+	CAASN
+	call str
+	call eos
+	ret
+sfor
+	tnvar
+	CEQ
+	chng
+	CAASN
+	call exp
+	CTO
+	call exp
+	call fstep
+	call eos
+	ret
+fstep
+	CSTEP
+	call exp
+	or
+	ret
+slocate
+	call exp
+	CCOM
+	call exp
+	CCOM
+	call snext
+	ret
+sget
+	call d1
+	CCOM
+snext
+	tnvar
+	call eos
+	ret
+srest
+	call exp
+	call eos
+	or
+	call eos
+	ret
+sinput    //"slinput", "sinput" olarak değiştirildi.
+	call opd
+sread
+	call nsvrl
+	call eos
+	ret
+eos
+	CEOS
+	or
+	CCR
+	ret
+sprint
+	call d1
+	call eos
+	or
+	call opd
+slprint
+	call pr1
+	call eos
+	ret
+d1
+	CPND
+	call exp
+	ret
+nsvar
+	tnvar
+	or
+	tsvar
+	ret
+nsvrl
+	call nsvar
+	call nsv2
+	or
+	ret
+nsv2
+	CCOM
+	call nsvrl
+	or
+	ret
+sxio
+	call exp
+	CCOM
+sopen
+	call d1
+	CCOM
+	call texp
+	CCOM
+	call fs
+	call eos
+	ret
+sclose
+	call d1
+	call eos
+	ret
+senter
+sload
+ssave
+	call fs
+	call eos
+	ret
+srun
+	call fs
+	call eos
+	or
+	call eos
+	ret
+opd
+	call d1
+	CCOM
+	or
+	call d1
+	CSC
+	or
+	ret
+slist
+	call fs
+	call eos
+	or
+	call fs
+	CCOM
+	call lis
+	or
+	call lis
+	ret
+lis
+	call l1
+	call eos2
+	ret
+sstatus
+	call stat
+	call eos2
+	ret
+stat
+	call d1
+	CCOM
+	call nvar
+	ret
+snote
+spoint
+	call stat
+	CCOM
+	call nvar
+	call eos2
+	ret
+fs
+	call str
+	ret
+texp
+	call exp
+	CCOM
+	call exp
+	ret
+ssound
+	call exp
+	CCOM
+ssetcolor
+	call exp
+	CCOM
+spoke
+splot
+spos
+sdrawto
+	call texp
+	call eos2
+	ret
+sdim
+scom
+	call nsml
+	call eos2
+	ret
+son
+	call exp
+	call on1
+	call expl
+	call eos2
+	ret
+on1
+	CGTO
+	or
+	CGS
+	ret
+expl
+	call exp
+	call expl1
+	ret
+expl1
+	CCOM
+	call expl
+	or
+	ret
+eos2
+	CEOS
+	or
+	CCR
+	ret
+nsmat
+	tnvar
+	CLPRN
+	chng
+	CDLPRN
+	call exp
+	call nmat2
+	CRPRN
+	or
+	tsvar
+	CLPRN
+	chng
+	CDSLPR
+	call exp
+	CRPRN
+	ret
+nsml
+	call nsmat
+	call nsml2
+	or
+	ret
+nsml2
+	CCOM
+	call nsml
+	or
+	ret
+sif
+	call exp
+	CTHEN
+	call ifa
+	call eos2
+	ret
+ifa
+	tncon
+	or
+	eif
+pr1
+	call pel
+	or
+	call psl
+	call pr2
+	or
+	ret
+pr2
+	call pel
+	or
+	ret
+pel
+	call pes
+	call pela
+	ret
+pes
+	call exp
+	or
+	call str
+	ret
+pela
+	call psl
+	call pr2
+	or
+	ret
+psl
+	call ps
+	call psla
+	ret
+psla
+	call psl
+	or
+	ret
+ps
+	CCOM
+	or
+	CSC
+	ret
+l1
+	call exp
+	call l2
+	or
+	ret
+l2
+	CCOM
+	call exp
+	or
+	ret
+srem
+	erem
+sdata
+	edata
+nfsp
+	CASC
+	or
+	CVAL
+	or
+	CADR
+	or
+	CLEN
+	ret
+sfnp
+	CSTR
+	or
+	CCHR
+	or
+	ret
+pusr
+	call exp
+	call pusr1
+	ret
+pusr1
+	CCOM
+	chng
+	CACOM
+	call pusr
+	or
+	ret

@@ -1,0 +1,3 @@
+/home/desmond/Downloads/atari/source-code/cmake-build-debug/CMakeFiles/source_code.dir
+/home/desmond/Downloads/atari/source-code/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/desmond/Downloads/atari/source-code/cmake-build-debug/CMakeFiles/rebuild_cache.dir

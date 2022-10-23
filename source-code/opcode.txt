@@ -1,0 +1,11 @@
+0 : call
+1 : chng
+2 : or
+3 : ret
+4 : tncon
+5 : tnvar
+6 : tscon
+7 : tsvar
+8 : edata
+9 : erem
+a : eif

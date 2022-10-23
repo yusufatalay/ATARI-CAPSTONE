@@ -1,0 +1,4 @@
+/opt/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/opt/clion/bin/ninja/linux/ninja -G Ninja -S /home/desmond/Downloads/atari/source-code -B /home/desmond/Downloads/atari/source-code/cmake-build-debug
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/desmond/Downloads/atari/source-code/cmake-build-debug
