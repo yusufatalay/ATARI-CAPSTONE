@@ -20,12 +20,13 @@ void synok(){
         else{
         getll();
         if(linelength==(cox-1)){
-
             synin();
         }
 
-        else if(llength> (cox-1))
+        else if(linelength> (cox-1)){
+
             syncon();
+        }
         temp = llength-cox-1;
         temp ^= 0xff;
         explow(stmcur, temp);
@@ -34,12 +35,7 @@ void synok(){
             synin();
         }
     }
-    syncon(){
-        push(temp);                 //azaltılacak alan
-        temp = stmcur+temp;
-        stmcur = temp;
-        contflow(stmcur,temp);
-    }
+
 
    // execute();
 }

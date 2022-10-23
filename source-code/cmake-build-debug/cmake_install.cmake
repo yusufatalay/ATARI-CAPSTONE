@@ -1,4 +1,4 @@
-# Install script for directory: /home/desmond/Downloads/atari/source-code
+# Install script for directory: /home/desmond/Projects/ATARI-CAPSTONE/source-code
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/desmond/Downloads/atari/source-code/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/desmond/Projects/ATARI-CAPSTONE/source-code/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

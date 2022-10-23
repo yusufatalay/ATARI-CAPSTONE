@@ -180,10 +180,16 @@ int getll(){
     }
 }
 void synin(){
-        int i=cox;
+        int i=cox; // TODO: ASK SERKAN
         do {
-            i--;
+            i--; // SYN7
             stmcur[i] = outbuff[i];          //kontrol edilecek
 
-        } while(i!=-2);
+        } while(i!=0); // TYA ; BNE :SYN7 // PREVIOUSLT i != -2
 }
+void syncon(){
+        push(cox);                 //azaltılacak alan
+        temp = stmcur+temp;
+        stmcur = temp;
+        contflow(stmcur,temp);
+    }
