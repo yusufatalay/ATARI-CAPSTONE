@@ -9,36 +9,7 @@
 #include "initializer.h"
 
 
-void synok(){
-    char temp = cox;
-    outbuff[cox]=stmlbd;
-    if(inbuff[cix]=='\r'){
-        outbuff[2]=cox;
-        if(getstmt()){
-            // probably will stay empty here.
-        }
-        else{
-        getll();
-        if(linelength==(cox-1)){
-            synin();
-        }
 
-        else if(linelength> (cox-1)){
-
-            syncon();
-        }
-        temp = llength-cox-1;
-        temp ^= 0xff;
-        explow(stmcur, temp);
-        svesa= stmcur;
-        if(svesa!='\0')
-            synin();
-        }
-    }
-
-
-   // execute();
-}
 
 int main(void){
     initializeTables();                                  //reads tables statement name table, operator token table, syntax table and
@@ -85,3 +56,38 @@ int main(void){
         printf("ready\n");                      //writes to user ready to get a new line
     }
 }
+
+/*
+ * STATEMENT TABLE FORMAT
+ *    [][]          []            []                      []            [...]   []         []                      []            [...]   []    []
+ * linenumber | linelength | statement length | statement name token | tokens | eos | statement length | statement name token | tokens | eos | eol
+ */
+//void synok(){
+//    char temp = cox;
+//    outbuff[cox]=stmlbd;
+//    if(inbuff[cix]=='\r'){
+//        outbuff[1]=cox;
+//        if(getstmt()){
+//            // probably will stay empty here.
+//        }
+//        else{
+//            getll();
+//            if(linelength==(cox-2)){
+////                synin();
+//            }
+//
+//            else if(linelength> (cox-2)){
+//
+////                syncon();
+//            }
+//            temp = linelength-cox-2;
+//            temp ^= 0xfe;
+//            explow(stmcur, temp);
+//            svesa= stmcur;
+//            if(svesa!='\-1')
+//                synin();
+//        }
+//    }
+//
+//    // execute();
+//}

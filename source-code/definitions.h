@@ -25,7 +25,8 @@ char inbuff[255], cix, maxcix=0x7f,
 outbuff[255],cox;
 
 char vntab[1000]; int VNTAB_LEVEL;
-char stmtab[1000]; int STMTAB_LEVEL; // statement table
+char stmtab[2000]; int smttab_index, STMTAB_LEVEL; // statement table
+
 
 int binint=0;
 int stenum;

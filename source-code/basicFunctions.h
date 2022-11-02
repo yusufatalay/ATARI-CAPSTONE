@@ -3,7 +3,7 @@
 #include <inttypes.h>
 void printINBUFF(char* str){
     printf("%-25sINBUFFER CURRENT INDEX = %-2d  INBUFF :  ",str,cix);
-    for(int i=0;i<30;i++){
+    for(int i=0; inbuff[i] != '\0' ;i++){
         if(i<cix)
             printf(ANSI_COLOR_GREEN "%d|" ANSI_COLOR_RESET,(uint8_t)inbuff[i]);
         else
@@ -13,11 +13,17 @@ void printINBUFF(char* str){
 }
 void printOUTBUFF(char* str){
     printf("%-25sOUTBUFFER CURRENT INDEX = %-2d OUTBUFF : \n",str,cox);
-    for(int i=0;i<cox;i++){
+    for(int i=0; i < cox;i++){
             printf(ANSI_COLOR_BLUE "\t%d\n" ANSI_COLOR_RESET,(uint8_t)outbuff[i]);
     }
 }
+void printSTATEMENTTABLE(char* str){
+   printf("%-25s, STATEMENT TABLE LEVEL : %-2d", str, STMTAB_LEVEL );
 
+   for(int i = 0; stmtab[i] != '\0' ;i++){
+       printf(ANSI_COLOR_GREEN "%d|", ANSI_COLOR_RESET, (uint8_t)stmtab[i]);
+   }
+}
 void printStack(char* str,char*lbl){
     printf(ANSI_COLOR_BR_RED"STACK %s %s:\n"ANSI_COLOR_RESET,str,lbl);
     for(int i=stklvl ;i>0;i-=4 ){
@@ -147,16 +153,24 @@ void skblank(){                                                     //skips all 
 
 int getstmt(){
 
-    char low = (char)(tslnum&0xff00);
-    char high = (char)(tslnum&0x00ff);
+     short lNum=0;
+    while(inbuff[cix]<=57 && inbuff[cix]>=48){
+        lNum*=10;
+        lNum+=(short)(inbuff[cix++]-'0');
+    }
+//        [low][high]
+    char low = (char)(lNum&0xff00);
+    char high = (char)(lNum&0x00ff);
 
     if(stmtab[0] == low && stmtab[1]==high){
-        stmcur = &stmtab[4];
+        stmcur = &stmtab[0];
         savcur = stmcur ;
         stmcur = stmtab;
         return 0;
     }
-    int i =5;
+    // TODO: get line length and add that to i
+
+    int i = 5;
     while(stmtab[i] != '\0'){
         if(stmtab[i] == '\r'){
             if(stmtab[i+1] == low && stmtab[i+2]==high){
@@ -172,24 +186,25 @@ int getstmt(){
     return 1;
 }
 
-int getll(){
-    char* temp = stmcur;
-    int len = 0;
-    for (; *temp != '\n' ; temp++){
-        len++;
-    }
+void getll(){
+   linelength = 0;
+   for (int i = 0 ; inbuff[i] != '\0' ; i++){
+       if (inbuff[i] != ':'){
+           linelength++;
+       }
+   }
 }
-void synin(){
-        int i=cox; // TODO: ASK SERKAN
-        do {
-            i--; // SYN7
-            stmcur[i] = outbuff[i];          //kontrol edilecek
-
-        } while(i!=0); // TYA ; BNE :SYN7 // PREVIOUSLT i != -2
-}
-void syncon(){
-        push(cox);                 //azaltılacak alan
-        temp = stmcur+temp;
-        stmcur = temp;
-        contflow(stmcur,temp);
-    }
+//void synin(){
+//        int i=cox; // TODO: ASK SERKAN
+//        do {
+//            i--; // SYN7
+//            stmcur[i] = outbuff[i];          //kontrol edilecek
+//
+//        } while(i!=-2); // TYA ; BNE :SYN7 // PREVIOUSLT i != -2
+//}
+//void syncon(){ // uses hardware push
+//        push(cox);                 //azaltılacak alan //
+//        temp = stmcur+temp;
+//        stmcur = temp;
+//        contflow(stmcur,temp);
+//    }
