@@ -72,6 +72,7 @@ char* getFromTable(void* table){
     return temp;
 }
 
+// bufferIndex holds the index of token in inbuff ???????????????????????????????????
 int search(void* table ,int SRCNXT) {                               //It is a deus ex machina searches tokens in different tables
     int size;                                                       //it is size of searching token
     int error;

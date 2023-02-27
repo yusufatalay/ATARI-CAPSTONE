@@ -24,16 +24,16 @@ int main(void){
         cox = 0;                                        //initializes output buffer index as 0
         printINBUFF("EDITOR INITIAL: ");
         printOUTBUFF("EDITOR INITIAL: ");
-        direct_statement = 0;                           //initializes direct statement flag as 0(direct statements execute program)
+        DIRFLG = 0;                           //initializes direct statement flag as 0(direct statements execute program)
         skblank();                                      //skips blanks
         getlnum();                                      //gets line number from input and locates to outbuff's first 2 byte
         setcode(NULL);                               //leaves 1 byte space for line length after syntax operation editor will replace as line number
         if (binint < 0)                                 //binint was set in getlnum function. binint is default 8000 if user enter line number its set in getlnum
-            direct_statement = 1;
+            DIRFLG = 1;
         skblank();
         stmstart=cix;                                   //statement start index
         if (inbuff[cix] == '\n') {                      //if program editor is at end of the line and direct statement(user enters blank line)
-            if (direct_statement == 1)                  //program editor goes to request new line
+            if (DIRFLG == 1)                  //program editor goes to request new line
                 continue;
 
         }
@@ -62,32 +62,56 @@ int main(void){
  *    [][]          []            []                      []            [...]   []         []                      []            [...]   []    []
  * linenumber | linelength | statement length | statement name token | tokens | eos | statement length | statement name token | tokens | eos | eol
  */
-//void synok(){
-//    char temp = cox;
-//    outbuff[cox]=stmlbd;
-//    if(inbuff[cix]=='\r'){
-//        outbuff[1]=cox;
-//        if(getstmt()){
-//            // probably will stay empty here.
-//        }
-//        else{
-//            getll();
-//            if(linelength==(cox-2)){
-////                synin();
-//            }
-//
-//            else if(linelength> (cox-2)){
-//
-////                syncon();
-//            }
-//            temp = linelength-cox-2;
-//            temp ^= 0xfe;
-//            explow(stmcur, temp);
-//            svesa= stmcur;
-//            if(svesa!='\-1')
-//                synin();
-//        }
-//    }
-//
-//    // execute();
-//}
+void synok(){
+    char temp = cox;
+    outbuff[stmlbd]=cox;
+    if(inbuff[cix-1]=='\r'){
+        outbuff[1]=cox;
+        if(getstmt()){
+            // probably will stay empty here.
+        }
+        else{
+            getll();
+            if(linelength==(cox-2)){
+                synin();
+            }
+
+            else if(linelength> (cox-2)){
+
+                syncon();
+            }
+            temp = linelength-cox-2;
+            temp ^= 0xe;
+            explow(stmcur, temp);
+            svesa= stmcur;
+            if(svesa!='\-1')
+                synin();
+        }
+    }
+    else{ // syn1
+        stmlbd = cox;
+        setcode(cox);
+
+        skblank();
+        search(sntab, 2); // TODO KEEP AN EYE ON THIS
+        cix = bufferIndex;
+        setcode(stenum);
+        skblank();
+        if(!synent()){
+           synok();
+        }
+        if(inbuff[maxcix] == '\r'){
+           inbuff[maxcix+1] =   inbuff[maxcix] ;
+           inbuff[maxcix]  = 0x20 | 0x80;
+        }else{
+            inbuff[maxcix] = inbuff[maxcix] | 0x80;
+        }
+        DIRFLG = DIRFLG | 0x40; // ??????????????????
+        cix = stmstart;
+        stmlbd = 3;
+        cox = 4;
+        setcode(0x37);
+    }
+
+    // execute();
+}

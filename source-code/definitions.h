@@ -31,7 +31,7 @@ char stmtab[2000]; int smttab_index, STMTAB_LEVEL; // statement table
 int binint=0;
 int stenum;
 int stmlbd,stmstart;
-int direct_statement;
+int DIRFLG;
 
 int stack[200];
 int cpc,code,stklvl;
