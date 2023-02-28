@@ -63,30 +63,33 @@ int main(void){
  * linenumber | linelength | statement length | statement name token | tokens | eos | statement length | statement name token | tokens | eos | eol
  */
 void synok(){
+
     char temp = cox;
     outbuff[stmlbd]=cox;
     if(inbuff[cix-1]=='\r'){
-        outbuff[1]=cox;
+        outbuff[2]=cox;
         if(getstmt()){
             // probably will stay empty here.
         }
-        else{
-            getll();
-            if(linelength==(cox-2)){
+        else {
+            getll(); //syn6 needs to execute in all cases.
+        }
+        if(linelength==(cox-2)){
                 synin();
-            }
+        }
 
-            else if(linelength> (cox-2)){
+        else if(linelength> (cox-2)){
 
-                syncon();
-            }
+            syncon();
+        }
             temp = linelength-cox-2;
-            temp ^= 0xe;
+            temp ^= 0xff; //28.02 bitiş
+
             explow(stmcur, temp);
             svesa= stmcur;
             if(svesa!='\-1')
                 synin();
-        }
+
     }
     else{ // syn1
         stmlbd = cox;
@@ -110,7 +113,13 @@ void synok(){
         cix = stmstart;
         stmlbd = 3;
         cox = 4;
-        setcode(0x37);
+
+        while(inbuff[cix] != '\r') {                //28.02 başladı
+            setcode(0x37); //0x37 is CERR
+            cix++;
+        }
+        setcode(inbuff[cix]);
+
     }
 
     // execute();
