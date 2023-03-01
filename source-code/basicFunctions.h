@@ -152,49 +152,35 @@ void skblank(){                                                     //skips all 
     printINBUFF("SKBLANK: ");
 }
 
+int getll(){
+  return stmcur[2] ;
+}
+
+// TODO: half made also implement GNXTL @ A9D0
+// returns 1 if found or where it would go if not found, return 0 if not found
 int getstmt(){
+    savcur[-1] = stmcur[0] ;
+    savcur[0] = stmcur[1];
+    stmcur[0] = stmtab[1];
+    stmcur[-1] = stmtab[0];
 
-     short lNum=0;
-    while(inbuff[cix]<=57 && inbuff[cix]>=48){
-        lNum*=10;
-        lNum+=(short)(inbuff[cix++]-'0');
-    }
-//        [low][high]
-    char low = (char)(lNum&0xff00);
-    char high = (char)(lNum&0x00ff);
-
-    if(stmtab[0] == low && stmtab[1]==high){
-        stmcur = &stmtab[0];
-        savcur = stmcur ;
-        stmcur = stmtab;
+    if (stmcur[0] < tslnum + 1){
+        // gs2
+        getll();
+    }else if (stmcur[0] > tslnum + 1){
         return 0;
+    }else if (stmcur[-1] < tslnum){
+       // gs2
+   }else if (stmcur[-1] > tslnum){
+      return 0 ;
+   }else{
+        return -1;
     }
-    // TODO: get line length and add that to i
 
-    int i = 5;
-    while(stmtab[i] != '\0'){
-        if(stmtab[i] == '\r'){
-            if(stmtab[i+1] == low && stmtab[i+2]==high){
-                stmcur = &stmtab[i+5];
-                savcur = stmcur ;
-                stmcur = stmtab;
-                return 0;
-            }
-        }
-    }
-    savcur = stmcur ;
-    stmcur = stmtab;
-    return 1;
+
+
 }
 
-void getll(){
-   linelength = 0;
-   for (int i = 0 ; inbuff[i] != '\0' ; i++){
-       if (inbuff[i] != ':'){
-           linelength++;
-       }
-   }
-}
 //void synin(){
 //        int i=cox; // TODO: ASK SERKAN
 //        do {

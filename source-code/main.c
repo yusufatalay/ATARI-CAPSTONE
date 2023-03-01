@@ -66,24 +66,22 @@ void synok(){
 
     char temp = cox;
     outbuff[stmlbd]=cox;
-    if(inbuff[cix-1]=='\r'){
+    if(inbuff[cix-1]=='\r'){ // SYN4
         outbuff[2]=cox;
-        if(getstmt()){
-            // probably will stay empty here.
+       int linel;
+        if(getstmt()) { // statement found
+            linel = 0;
         }
-        else {
-            getll(); //syn6 needs to execute in all cases.
-        }
-        if(linelength==(cox-2)){
-                synin();
+        linel = getll();
+        if (cox == linel){
+            //synin
+        }else if (cox > linel){
+            // syncon
         }
 
-        else if(linelength> (cox-2)){
 
-            syncon();
-        }
             temp = linelength-cox-2;
-            temp ^= 0xff; //28.02 bitiş
+            temp ^= 0xff;
 
             explow(stmcur, temp);
             svesa= stmcur;
@@ -114,7 +112,7 @@ void synok(){
         stmlbd = 3;
         cox = 4;
 
-        while(inbuff[cix] != '\r') {                //28.02 başladı
+        while(inbuff[cix] != '\r') {
             setcode(0x37); //0x37 is CERR
             cix++;
         }
