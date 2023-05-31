@@ -1,0 +1,164 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "basicFunctions.h"
+#include "definitions.h"
+#include "syntaxer.h"
+#include "constantFunctions.h"
+#include "variableFunctions.h"
+#include "initializer.h"
+
+void synok();
+
+void syn1();
+
+void syn3a();
+
+char tempRegA;
+char tempRegY;
+char tempRegX;
+
+/*
+ * STATEMENT TABLE FORMAT
+ *    [][]          []            []                      []            [...]   []         []                      []            [...]   []    []
+ * linenumber | linelength | statement length | statement name token | tokens | eos | statement length | statement name token | tokens | eos | eol
+ */
+void synok() {
+    tempRegA = cox;                // lda cox
+    tempRegY = stmlbd;             // ldy stmlbd
+    outbuff[tempRegY] = tempRegA;       // sta [outbuff], Y
+    tempRegY = cix;                     // ldy cix
+    tempRegY--;                         // DEY
+    tempRegA = inbuff[tempRegY];         // lda [inbuff], Y
+
+    if (tempRegA != '\r') { // CMP #CR
+        syn1();             // BNE :SYN1
+    } else {
+        outbuff[1] = cox;
+        if (getstmt()) {
+            // probably will stay empty here.
+        } else {
+            getll();
+            if (linelength == (cox - 1)) {
+                synin();
+            } else if (linelength > (cox - 1)) {
+
+                syncon();
+            } else {
+                tempRegA = linelength - cox - 1;
+                tempRegA ^= 0xfe;
+                expand(stmcur, tempRegA);
+            }
+
+//                svesa = stmcur;
+//                if (svesa != '\-1')
+//                    synin();
+            if (stmcur != '\-1') {
+                synin();
+            }
+        }
+    }
+
+
+}
+
+
+int main(void) { // A.K.A syntax (label name) or editor
+    initializeTables();                                  //reads tables statement name table, operator token table, syntax table and
+    //creates program[] array what is syntax table
+    printf("ready\n");
+    while (1) {                                          //program editor loop: takes input from and tokenizes
+        char strEnd[2] = {'\r', '\0'};
+        OPNTAB_STRING[6].val.str = strEnd;                //added because program doesnt read \r as char from opntab-string-values.txt
+        gets(inbuff);                                   //gets input from user
+
+        inbuff[strlen(inbuff)] = '\r';
+        cix = 0;                                        //initializes input buffer index as 0
+        cox = 0;                                        //initializes output buffer index as 0
+        printINBUFF("EDITOR INITIAL: ");
+        printOUTBUFF("EDITOR INITIAL: ");
+     int   direct_statement = 0;                           //initializes direct statement flag as 0(direct statements execute program)
+        skblank();                                      //skips blanks
+        getlnum();                                      //gets line number from input and locates to outbuff's first 2 byte
+        setcode(NULL);                               //leaves 1 byte space for line length after syntax operation editor will replace as line number
+        if (binint <
+            0)                                 //binint was set in getlnum function. binint is default 8000 if user enter line number its set in getlnum
+            direct_statement = 1;
+        skblank();
+        stmstart = cix;                                   //statement start index
+        if (inbuff[cix] ==
+            '\n') {                      //if program editor is at end of the line and direct statement(user enters blank line)
+            if (direct_statement == 1)                  //program editor goes to request new line
+                continue;
+
+        }
+        stmlbd = cox;                                     //stmlbd keeps the index which will be determined as statement length
+        setcode(NULL);                               //reserves 1 byte space for statement length
+        skblank();
+        search(sntab,
+               0);                        //searches the next token in statement table. if finds keeps the statement's index as stenum
+        cix = bufferIndex;                                //equalizes input buffer index to old buffer index + token size
+        printINBUFF("EDITOR AFTER SEARCH: ");
+        setcode(&stenum);                               //5. index of outbuff is become statement number
+        skblank();
+        if (synent()) {                                   //calls the synaxer.
+            fprintf(stderr, "error\n");           //if an error occures synent returns 1
+        }
+        outbuff[2] = cox;                             //sets line length
+        outbuff[stmlbd] = cox;                        //sets statement length
+//        synok();
+        printINBUFF("EDITOR - END OF EDITOR: ");
+        printOUTBUFF("EDITOR - END OF EDITOR: ");
+        printf("ready\n");                      //writes to user ready to get a new line
+    }
+
+}
+
+// a.k.a synl
+void syn1() {
+    // synl a.k.a xif
+    tempRegA = cox;     // LDA COX
+    stmlbd = tempRegA;        // STA STMLBD
+    setcode(&tempRegA);   // JSR :SETCODE
+    skblank();                // JSR SKBLANK
+    //    int tableAddress = &sntab;
+    //    tempRegA = (tableAddress >> (8)); // LDA #SNTAB/256
+    //    char tempRegY = (tableAddress) & 0xff; // LDY #SNTAB&255
+    tempRegX = 2; // LDX #2
+    search(&sntab, 0); // JSR SEARCH
+    cix = tempRegX;                   // STX CIX
+    tempRegA = stenum;                // LDA STENUM
+    setcode(&tempRegA);            // LDA STENUM
+    skblank();                         // JSR SKBLANK
+
+    if (synent()) {                     // JSR SYNENT
+        fprintf(stderr, "error\n");
+    }
+    synok();                            // BCC SYNOK
+    tempRegY = maxcix;             // LDY MAXCIX
+    tempRegA = inbuff[tempRegY];         // LDA [INBUFF], Y
+    if (tempRegA != '\r') {              // CMP #CR ;
+        syn3a();                        // BNE SYN3A
+    } else {
+        tempRegY++;                      // INY
+        inbuff[tempRegY] = tempRegA;     // LDA [INBUFF], Y
+        tempRegY--;                      // DEY
+        tempRegA = 0x20;                  // LDA #$20
+    }
+    syn3a();
+}
+
+void syn3a() {
+    tempRegA = tempRegA | 0x80;        // ORA #$80 // TODO: ask about this one
+    inbuff[tempRegY] = tempRegA;       // STA [INBUFF], Y
+    tempRegA = 0x40;                // LDA #$40
+//                tempRegA = tempRegA | dirflg
+//                dirflag = tempRegA
+    tempRegY = stmstart;            // LDY STMSTRT
+    cix = tempRegY;                  // STY CIX
+    tempRegX = 3;                    // LDX #3
+    stmlbd = tempRegX;              // STX STMLBD
+    tempRegX++;                     // INX
+    cox = tempRegX;                 // STX COX
+//                tempRegA = 0xAAAA             // 0xAAAA is arbitrary original assembly code was LDA #CERR
+}

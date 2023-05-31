@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 void initializeSntab(){
     sntab[0].name="rem";
     sntab[0].val.num=labelSearch("srem");

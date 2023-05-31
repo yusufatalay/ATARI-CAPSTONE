@@ -6,6 +6,7 @@
     CSC    ;
     CCR    \r
     CGTO   goto
+    CFOR   for
     CGS   gosub
     CTO   to
     CSTEP   step

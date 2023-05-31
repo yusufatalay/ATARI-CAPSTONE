@@ -14,39 +14,48 @@ struct table{
 };
 
 
-struct table OPNTAB_STRING[71];
-struct table sntab[200];
-struct label LABEL[120];
-struct table OPNTAB[55];
+ struct table OPNTAB_STRING[71];
+ struct table sntab[200];
+ struct label LABEL[120];
+ struct table OPNTAB[55];
 
-short program[20000];
+ short program[20000];
 
-char inbuff[255], cix, maxcix=0x7f,
+ char inbuff[255], cix, maxcix=0x7f,
 outbuff[255],cox;
 
-char vntab[1000]; int VNTAB_LEVEL;
-char stmtab[2000]; int smttab_index, STMTAB_LEVEL; // statement table
+ char vntab[1000]; int VNTAB_LEVEL;
+ char stmtab[2000] = {0};
+ int smttab_index, STMTAB_LEVEL; // statement table
 
+// global registers
+ char REGISTER_A;
+ char REGISTER_Y;
+ char REGISTER_X;
 
-int binint=0;
-int stenum;
-int stmlbd,stmstart;
-int direct_statement;
+ int binint=0;
+ int stenum;
+ int stmlbd,stmstart;
+ int DIRFLG;
 
-int stack[200];
-int cpc,code,stklvl;
-int tvscix,tscox;
+ int stack[200];
+ int cpc,code,stklvl;
+ int tvscix,tscox;
 
-char svontx,svontc,svontl,svvvte=0;
+ char svontx,svontc,svontl,svvvte=0;
 
-short linelength;
-char* stmcur;
-char* savcur;
-short tslnum;
-int bufferIndex;
-int tableIndex;
+ short linelength;
+ char* stmcur= {0};
+ char* savcur = {0};
+ char* svesa = {0};
+ int stindex;
+ int nxtstd;
+ short tslnum;
 
-char tempArr[255];
+ int bufferIndex;
+ int tableIndex;
+
+ char tempArr[255];
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
@@ -60,4 +69,5 @@ char tempArr[255];
 #define ANSI_COLOR_BRIGHT_GREEN        "\x1b[92m"
 #define ANSI_COLOR_BR_YELLOW        "\x1b[93m"
 #define ANSI_COLOR_BR_MAGENTA        "\x1b[95m"
+
 #endif //ATARI_ASSEMBLER_DEFINITIONS_H
